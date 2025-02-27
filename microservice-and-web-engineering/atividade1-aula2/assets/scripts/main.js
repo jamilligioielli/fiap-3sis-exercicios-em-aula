@@ -20,8 +20,9 @@ function addListElements() {
     addElementForm.addEventListener('submit', event => {
       event.preventDefault();
       const wordInput = document.getElementById('word').value;
-
-      appendNewElementWithTextContent('randomWordsList', 'li', wordInput);
+      if (wordInput) {
+        appendNewElementWithTextContent('randomWordsList', 'li', wordInput);  
+      }
     });
   }
 }
@@ -40,26 +41,16 @@ function removeListElements() {
   } 
 }
 
-
+/** Consumindo dados de uma API (GET) */
 async function getMessageFromMockableIo() {
-  const apiURL = "http://demo0475534.mockable.io/a1-exercicio4-jamilli";
-  try {
-    const response = await fetch(apiURL);
-    if (!response.ok) {
-      throw new Error(`Message API Unavailable`);
-    }
-
-    const jsonValue = await response.json();
-    if (jsonValue) {
-      const mensagem = jsonValue["mensagem"];
-      appendNewElementWithTextContent("mockableMsg", "div", mensagem);
-    }
-
-  } catch (error) {
-    console.error(error)
-  } 
+  const jsonValue = await getData(mockableEndpoints.getMessage) ?? { mensagem: "Teste mockado"};
+  if (jsonValue) {
+    const mensagem = jsonValue["mensagem"];
+    appendNewElementWithTextContent("mockableMsg", "div", mensagem);
+  }
 }
 
+/** Validação de formulários com JavaScript */
 function validateRequiredFields(field, fieldErrorEl) {
   field.addEventListener('focusout', () => {
 		if (!field.value) {
@@ -76,29 +67,17 @@ function validateRequiredFields(field, fieldErrorEl) {
 	});
 }
 
+/** Enviando dados para a API (POST) */
 async function postFormDataToMockableIo(nomeValue, emailValue) {
-	const apiURL = 'http://demo0475534.mockable.io/a1-exercicio5-jamilli';
-
-	try {
-    const response = await fetch(apiURL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				nome: nomeValue,
-				email: emailValue
-			})
-		});
-    
-		const jsonValue = await response.json();
-    if (jsonValue) {
-      console.log(jsonValue)
-			appendNewElementWithTextContent('mockablePost', 'div', 'Dados enviados com sucesso!');
-		}
-	} catch (error) {
-		console.error(error);
-	}
+  const formData = {
+    nome: nomeValue,
+    email: emailValue,
+  }
+  const jsonValue = await postData(mockableEndpoints.postData, formData);
+  if (jsonValue) {
+    console.log(jsonValue)
+    appendNewElementWithTextContent('mockablePost', 'div', jsonValue["msg"]);
+  }
 }
 
 
@@ -126,30 +105,28 @@ function sendDataToMockableIo() {
 	}
 }
 
-async function getUserListFromMockableIo() {
-  const apiURL = "http://demo0475534.mockable.io/dados-tabela-jamilli";
-  try {
-    const response = await fetch(apiURL);
-    if (!response.ok) {
-      throw new Error(`Message API Unavailable`);
-    }
-
-    const jsonValue = await response.json();
-    if (jsonValue) {
-      return jsonValue;
-    }
-
-  } catch (error) {
-    console.error(error)
-  } 
+/** Exibindo dados retornados em tabela */
+/** Manipulação do JSON recebido */
+async function createNewTableWithMockableIoData(clearFilter) {
+  const originalItems = await getData(mockableEndpoints.getUsersData) ?? staticMockList;
+  let items = originalItems.filter(item => item.idade > 18);
+  if (clearFilter) {
+    items = originalItems;
+  }
+  const tableBodyEl = document.querySelector('#tableMock tbody');
+  let newRows = "";
+  items.forEach(item => {
+    newRows += `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.nome}</td>
+        <td>${item.email}</td>
+        <td>${item.idade}</td>
+      </tr>
+    `; 
+  })
+  tableBodyEl.innerHTML = newRows;
 }
-
-function createNewTableWithMockableIoData() {
-  const data = getUserListFromMockableIo();
-  console.log(data);
-  // Dai cria a tabela aqui
-}
-
 
 
 /** Chamadas das funções */

@@ -16,61 +16,39 @@
     <h1>Exercício 10</h1>
     <section>
       <h2>Listar dados</h2>
-      <table>
+      <table id="tableMock">
         <thead>
           <tr>
             <th>ID</th>
             <th>Nome</th>
             <th>Email</th>
+            <th>Idade</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>João Silva</td>
-            <td>joao.silva@email.com</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Ana Costa</td>
-            <td>ana.costa@email.com</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Pedro Oliveira</td>
-            <td>pedro.oliveira@email.com</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Maria Pereira</td>
-            <td>maria.pereira@email.com</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Lucas Santos</td>
-            <td>lucas.santos@email.com</td>
-          </tr>
         </tbody>
       </table>
     </section>
     <section>
       <h2>Cadastrar novo</h2>
-      <form id="mockablePostForm" action="" method="post">
+      <form id="mockablePostForm">
         <div class="form-field">
           <label for="name">Nome</label>
-          <span id="nome">
-            <input type="text" name="nome" placeholder="Digite seu nome" required />
-          </span>
+            <input id="nome" type="text" name="nome" placeholder="Digite seu nome" required />
         </div>
         <div class="form-field">
           <label for="email">E-mail</label>
-          <span id="email">
-            <input type="email" name="email" placeholder="Digite seu email" required />
-          </span>
+            <input id="email" type="email" name="email" placeholder="Digite seu email" required />
+        </div>
+        <div class="form-field">
+          <label for="idade">Idade</label>
+            <input id="idade" type="number" name="idade" placeholder="Digite sua idade" min="1" required />
         </div>
         <button type="submit">Enviar</button>
       </form>
     </section>
   </main>
+  <script src="assets/scripts/mockable-io.js"></script>
+  <script src="assets/scripts/exercicio10.js"></script>
 </body>
 </html>

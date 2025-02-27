@@ -58,3 +58,14 @@ input{
   font-style: italic;
   display: none;
 }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #DDD;
+}

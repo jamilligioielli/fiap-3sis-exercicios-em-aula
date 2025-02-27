@@ -17,7 +17,8 @@
     <h1>Atividade 1</h1>
   </header>
   <main id="main">
-    <h2>Exercícios da Atividade 1</h2>
+    <h2>Exercícios (1 a 9) da Atividade 1</h2>
+    <p>Consultar os arquivos da pasta assets para validar a implementação</p>
     <section>
       <button type="button" onclick="changeMainBackgroundColor()"> Mudar cor de fundo </button>
     </section>
@@ -70,13 +71,27 @@
     <section>
       <h3>Dados de uma tabela</h3>
       <table id="tableMock">
-
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Idade</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
       </table>
+      <button type="button" onclick="createNewTableWithMockableIoData(true)">Limpar filtro de maioridade</button>
+    </section>
+    <section>
+      <a href="./exercicio10.html">Visualizar exercício 10</a>
     </section>
   </main>
   <footer>
     <i>Criado por Jamilli Vitória Gioielli</i>
   </footer>
-  <script src="assets/scripts/server.js"></script>
+  <script src="assets/scripts/mockable-io.js"></script>
+  <script src="assets/scripts/main.js"></script>
 </body>
 </html>
