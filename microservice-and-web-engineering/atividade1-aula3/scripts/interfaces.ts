@@ -19,6 +19,7 @@ export interface Partida{
 }
 
 export interface Time{
+    id: number;
     nome: string;
     nomeCurto: string;
 }

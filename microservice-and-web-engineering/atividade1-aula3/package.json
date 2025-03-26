@@ -1,6 +1,6 @@
 {
-  "scripts":{
-    "start": "tsc ./scripts/index.ts"
+  "scripts": {
+    "start": "tsc --project ./tsconfig.json"
   },
   "dependencies": {
     "typescript": "^5.8.2"

@@ -29,11 +29,13 @@
         <br>
         <label for="dataFim">Data fim</label>
         <input type="text" id="dataFim" name="dataFim"/>
-        <button type="submit"> Cadastrar Campeonatos</button>
+        <button type="submit"> Cadastrar</button>
     </form>
     </div>
+    <br/>
+    <br/>
     <section>
-        <table id="campeonatos">
+        <table>
             <thead>
                 <th>Nome</th>
                 <th>Categoria</th>
@@ -41,8 +43,10 @@
                 <th>Data de inicio</th>
                 <th>Data fim</th>
             </thead>
+            <tbody id="campeonatos">
+            </tbody>
         </table>
     </section>
-    <script src="./scripts/campeonato.ts"></script>
+    <script type="module" src="./scripts/dist/campeonato.js"></script>
 </body>
 </html>

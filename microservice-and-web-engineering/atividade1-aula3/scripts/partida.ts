@@ -1,6 +1,6 @@
 
 import { Campeonato, Partida } from "./interfaces";
-import { LocalStorageCtrl } from "./localstoragectrl";
+import { LocalStorageCtrl } from "./localstoragectrl.js";
 
 const form = document.getElementById("formPartida") as HTMLFormElement;
 const formItens = {
@@ -10,10 +10,10 @@ const formItens = {
 }
 const tabela = document.getElementById("partidas");
 const localStorageCtrl = new LocalStorageCtrl();
-const campeonatos = localStorageCtrl.getLocalStorageItem("campeonatos") as Campeonato[];
-const partidasSalvas = localStorageCtrl.getLocalStorageItem("partidas") as Partida[];
 
 let partidas: Partida[] = [];
+const partidasSalvas = localStorageCtrl.getLocalStorageItem("partidas") as Partida[];
+const campeonatos = localStorageCtrl.getLocalStorageItem("campeonatos") as Campeonato[];
 
 const gerarListaListener = () => {
     form?.addEventListener("submit", (event) => {
@@ -46,8 +46,7 @@ const removerItem = (id:number) =>
     //remover da lista
     campeonatos.splice(campIndex, 1)
   }
-  localStorageCtrl.setLocalStorageItems("partida", partidas)
-  exibirTabela()
+  atualizarDados()
 }
 
 const editarItem = (id:number) => {
