@@ -13,6 +13,7 @@ const campeonatosSalvos = localStorageCtrl.getLocalStorageItem("campeonatos");
 let campeonatos = campeonatosSalvos ?? [];
 const gerarCampeonatosListener = () => {
     form?.addEventListener("submit", (event) => {
+        console.log(event);
         event.preventDefault();
         let lastIdIncrement = campeonatosSalvos && campeonatosSalvos.length > 0 ? campeonatosSalvos[campeonatosSalvos.length - 1].id + 1 : 1;
         let campeonato = {
@@ -27,7 +28,6 @@ const gerarCampeonatosListener = () => {
         form?.reset();
         atualizarDados();
     });
-    exibirTabela();
 };
 function removerItem(id) {
     const campIndex = campeonatosSalvos.findIndex((c) => c.id == id);
@@ -62,7 +62,8 @@ function editarItem(id) {
     exibirTabela();
 }
 const exibirTabela = () => {
-    tabela.innerHTML = "";
+    if (tabela.innerHTML != "")
+        tabela.innerHTML = "";
     if (campeonatosSalvos) {
         campeonatosSalvos.forEach((c) => {
             tabela.innerHTML += `

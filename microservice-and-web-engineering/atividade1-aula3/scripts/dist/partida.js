@@ -13,29 +13,34 @@ const campeonatos = localStorageCtrl.getLocalStorageItem("campeonatos");
 const gerarListaListener = () => {
     form?.addEventListener("submit", (event) => {
         event.preventDefault();
+        let lastIdIncrement = partidasSalvas && partidasSalvas.length > 0 ? partidasSalvas[partidasSalvas.length - 1].id + 1 : 1;
         let partida = {
-            id: Math.random(),
+            id: lastIdIncrement,
             campeonato: campeonatos.find(c => c.id == Number.parseInt(formItens.campeonatoId.value)) ?? null,
             timeMandante: formItens.mandanteI.value ?? "",
             timeVisitante: formItens.visitanteI.value ?? "",
         };
         partidas.push(partida);
+        form?.reset();
+        atualizarDados();
     });
-    atualizarDados();
-    form?.reset();
+    exibirTabela();
 };
 const atualizarDados = () => {
     localStorageCtrl.setLocalStorageItems("partida", partidas);
     exibirTabela();
+    editarOuRemoverListeners();
 };
 const removerItem = (id) => {
-    const campIndex = campeonatos.findIndex((c) => c.id == id);
+    const campIndex = partidasSalvas.findIndex((p) => p.id == id);
     //Validar se encontrou algum item  
     if (campIndex !== -1) {
         //remover da lista
-        campeonatos.splice(campIndex, 1);
+        partidasSalvas.splice(campIndex, 1);
+        partidas = partidasSalvas;
+        atualizarDados();
     }
-    atualizarDados();
+    exibirTabela();
 };
 const editarItem = (id) => {
     //Find = buscar um elemento em um array
@@ -52,22 +57,21 @@ const editarItem = (id) => {
         //remover da lista
         partidasSalvas.splice(campIndex, 1);
         partidas = partidasSalvas;
+        atualizarDados();
     }
-    atualizarDados();
+    exibirTabela();
 };
 const exibirTabela = () => {
     tabela.innerHTML = "";
     partidas.forEach((p) => {
         tabela.innerHTML += `
-    <tbody>
-        <tr>
-            <td>${p.campeonato.nome ?? "N/A"}</td>
-            <td>${p.timeMandante}</td>
-            <td>${p.timeVisitante}</td>
-            <button onclick="editarItem(${p.id})"> Editar </button> 
-            <button onclick="removerItem(${p.id})"> Remover </button> 
-        </tr>
-    </tbody>
+    <tr>
+        <td>${p.campeonato.nome ?? "N/A"}</td>
+        <td>${p.timeMandante}</td>
+        <td>${p.timeVisitante}</td>
+        <button class="btnEdit" data-id="${p.id}""> Editar </button> 
+              <button class="btnRemove" data-id="${p.id}"> Remover </button>
+    </tr>
   `;
     });
 };
@@ -80,6 +84,25 @@ const exibirCampeonatos = () => {
     `;
     });
 };
+const editarOuRemoverListeners = () => {
+    const editarBtns = document.querySelectorAll("button.btnEdit");
+    const removerBtns = document.querySelectorAll("button.btnRemove");
+    editarBtns.forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            console.log("cliked editar", btn);
+            const id = Number(event.target.getAttribute("data-id"));
+            editarItem(id);
+        });
+    });
+    removerBtns.forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            console.log("cliked remover", btn);
+            const id = Number(event.target.getAttribute("data-id"));
+            removerItem(id);
+        });
+    });
+};
 gerarListaListener();
 exibirTabela();
 exibirCampeonatos();
+editarOuRemoverListeners();

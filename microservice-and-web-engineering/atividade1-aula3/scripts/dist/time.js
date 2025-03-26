@@ -17,8 +17,8 @@ const gerarTimesListener = () => {
             nomeCurto: formItens.nomeCurtoI.value ?? ""
         };
         times.push(time);
+        atualizarDados();
     });
-    localStorageCtrl.setLocalStorageItems("times", times);
 };
 const removerItem = (id) => {
     const index = times.findIndex((t) => t.id == id);
@@ -26,8 +26,9 @@ const removerItem = (id) => {
     if (index !== -1) {
         //remover da lista
         times.splice(index, 1);
+        atualizarDados();
     }
-    atualizarDados();
+    exibirTabela();
 };
 const editarItem = (id) => {
     //Find = buscar um elemento em um array
@@ -43,8 +44,9 @@ const editarItem = (id) => {
         //remover da lista
         timesSalvos.splice(campIndex, 1);
         times = timesSalvos;
+        atualizarDados();
     }
-    atualizarDados();
+    exibirTabela();
 };
 const exibirTabela = () => {
     tabela.innerHTML = "";
@@ -53,8 +55,8 @@ const exibirTabela = () => {
     <tr>
          <td>${time.nome}</td>
          <td>${time.nomeCurto}</td>
-         <button onclick="editarItem(${time.id})"> Editar </button> 
-        <button onclick="removerItem(${time.id})"> Remover </button>
+         <button class="btnEdit" data-id="${time.id}""> Editar </button> 
+              <button class="btnRemove" data-id="${time.id}"> Remover </button> 
     </tr>
   `;
     });
@@ -62,6 +64,26 @@ const exibirTabela = () => {
 const atualizarDados = () => {
     localStorageCtrl.setLocalStorageItems("times", times);
     exibirTabela();
+    editarOuRemoverListeners();
+};
+const editarOuRemoverListeners = () => {
+    const editarBtns = document.querySelectorAll("button.btnEdit");
+    const removerBtns = document.querySelectorAll("button.btnRemove");
+    editarBtns.forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            console.log("cliked editar", btn);
+            const id = Number(event.target.getAttribute("data-id"));
+            editarItem(id);
+        });
+    });
+    removerBtns.forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            console.log("cliked remover", btn);
+            const id = Number(event.target.getAttribute("data-id"));
+            removerItem(id);
+        });
+    });
 };
 gerarTimesListener();
 exibirTabela();
+editarOuRemoverListeners();
