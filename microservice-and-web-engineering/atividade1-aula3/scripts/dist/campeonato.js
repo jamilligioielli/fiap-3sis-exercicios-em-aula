@@ -27,6 +27,7 @@ const gerarCampeonatosListener = () => {
         atualizarDados();
         form?.reset();
     });
+    exibirTabela();
 };
 function removerItem(id) {
     const campIndex = campeonatosSalvos.findIndex((c) => c.id == id);
@@ -85,8 +86,8 @@ const atualizarDados = () => {
     editarOuRemoverListeners();
 };
 const editarOuRemoverListeners = () => {
-    const editarBtns = document.querySelectorAll("button.btnEdit");
-    const removerBtns = document.querySelectorAll("button.btnRemove");
+    const editarBtns = document.querySelectorAll("#campeonatos button.btnEdit");
+    const removerBtns = document.querySelectorAll("#campeonatos button.btnRemove");
     editarBtns.forEach((btn) => {
         btn.addEventListener("click", (event) => {
             console.log("cliked editar", btn);

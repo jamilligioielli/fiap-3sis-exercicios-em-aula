@@ -63,17 +63,19 @@ const editarItemPartidas = (id) => {
 const exibirTabelaPartidas = () => {
     if (tabelaPartida.innerHTML != "")
         tabelaPartida.innerHTML = "";
-    partidasSalvas.forEach((p) => {
-        tabelaPartida.innerHTML += `
-    <tr>
-        <td>${p.campeonato.nome ?? "N/A"}</td>
-        <td>${p.timeMandante}</td>
-        <td>${p.timeVisitante}</td>
-        <button class="btnEdit" data-id="${p.id}""> Editar </button> 
-        <button class="btnRemove" data-id="${p.id}"> Remover </button>
-    </tr>
-  `;
-    });
+    if (partidasSalvas) {
+        partidasSalvas.forEach((p) => {
+            tabelaPartida.innerHTML += `
+      <tr>
+          <td>${p.campeonato.nome ?? "N/A"}</td>
+          <td>${p.timeMandante}</td>
+          <td>${p.timeVisitante}</td>
+          <button class="btnEdit" data-id="${p.id}""> Editar </button> 
+          <button class="btnRemove" data-id="${p.id}"> Remover </button>
+      </tr>
+    `;
+        });
+    }
 };
 const exibirCampeonatos = () => {
     const selectCampeonatos = document.getElementById("campeonatos");
@@ -85,8 +87,8 @@ const exibirCampeonatos = () => {
     });
 };
 const editarOuRemoverListenersPartidas = () => {
-    const editarBtns = document.querySelectorAll("button.btnEdit");
-    const removerBtns = document.querySelectorAll("button.btnRemove");
+    const editarBtns = document.querySelectorAll("#partidas button.btnEdit");
+    const removerBtns = document.querySelectorAll("#partidas button.btnRemove");
     editarBtns.forEach((btn) => {
         btn.addEventListener("click", (event) => {
             console.log("cliked editar", btn);
@@ -103,6 +105,6 @@ const editarOuRemoverListenersPartidas = () => {
     });
 };
 gerarListaListener();
-exibirCampeonatos();
 exibirTabelaPartidas();
 editarOuRemoverListenersPartidas();
+exibirCampeonatos();

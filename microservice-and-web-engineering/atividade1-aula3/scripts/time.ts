@@ -90,11 +90,10 @@ const atualizarDadosTime = () => {
 }
 
 const editarOuRemoverListenersTime = () => {
-  const editarBtns = document.querySelectorAll("button.btnEdit")
-  const removerBtns = document.querySelectorAll("button.btnRemove")
+  let editarBtns = document.querySelectorAll("#times button.btnEdit")
+  let removerBtns = document.querySelectorAll("#times button.btnRemove")
   editarBtns.forEach((btn) => {
     btn.addEventListener("click", (event) => {
-      console.log("cliked editar", btn)
       const id = Number((event.target as HTMLElement).getAttribute("data-id"));
       editarItemTime(id);
     });
@@ -102,7 +101,6 @@ const editarOuRemoverListenersTime = () => {
 
   removerBtns.forEach((btn) => {
     btn.addEventListener("click", (event) => {
-      console.log("cliked remover", btn)
       const id = Number((event.target as HTMLElement).getAttribute("data-id"));
       removerItemTime(id);
     });
