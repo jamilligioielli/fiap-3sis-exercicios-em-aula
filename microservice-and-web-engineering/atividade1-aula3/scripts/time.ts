@@ -1,54 +1,58 @@
-import { Time } from "./interfaces";
-import { LocalStorageCtrl } from "./localstoragectrl.js";
+interface Time{
+    id: number;
+    nome: string;
+    nomeCurto: string;
+}
 
-const form = document.getElementById("formTimes");
-let formItens = {
+const formTime = document.getElementById("formTimes");
+let formItensTime = {
   nomeI: document.getElementById("nome") as HTMLFormElement,
   nomeCurtoI: document.getElementById("nomeCurto") as HTMLFormElement,
 }
-const tabela = document.getElementById("times");
-const localStorageCtrl = new LocalStorageCtrl();
+const tabelaTime = document.getElementById("times");
 
-let times: Time[] = [];
-const timesSalvos = localStorageCtrl.getLocalStorageItem("times") as Time[];
+const timesSalvos = window.getLocalStorageItem("times") as Time[];
+let times: Time[] = timesSalvos ?? [];
 
 const gerarTimesListener = () => {
-    form?.addEventListener("submit", (event) => {
+    formTime?.addEventListener("submit", (event) => {
         event.preventDefault();
-
+        let lastIdIncrement = timesSalvos && timesSalvos.length > 0 ? timesSalvos[timesSalvos.length - 1].id + 1 : 1;
         let time: Time = {
-          id: Math.random(),
-          nome: formItens.nomeI.value ?? "",
-          nomeCurto:  formItens.nomeCurtoI.value ?? ""
+          id: lastIdIncrement,
+          nome: formItensTime.nomeI.value ?? "",
+          nomeCurto:  formItensTime.nomeCurtoI.value ?? ""
         }
-        times.push(time)
-        atualizarDados()
+      times.push(time)
+      atualizarDadosTime()
     })
+    exibirTabelaTime()
 }
 
-const removerItem = (id:number) =>
+const removerItemTime = (id:number) =>
 {
-   const index =  times.findIndex(
+   const index =  timesSalvos.findIndex(
     (t:Time) => t.id == id);
 
   //Validar se encontrou algum item  
   if(index !== -1){
     //remover da lista
-    times.splice(index, 1)
-    atualizarDados()
+    timesSalvos.splice(index, 1)
+    times = timesSalvos;
+    atualizarDadosTime()
   }
-  exibirTabela()
+  exibirTabelaTime()
 }
 
-const editarItem = (id:number) => {
+const editarItemTime = (id:number) => {
   //Find = buscar um elemento em um array
   const item = timesSalvos.find(
     (t : Time) => t.id ==id);
   
   if(!item)  return;
 
-  formItens.nomeI.value = item.nome;
-  formItens.nomeCurtoI.value = item.nomeCurto;
+  formItensTime.nomeI.value = item.nome;
+  formItensTime.nomeCurtoI.value = item.nomeCurto;
   
   //findIndex buscar o index do objeto
   const campIndex = timesSalvos.findIndex((t : Time) => t.id ==id);
@@ -59,39 +63,40 @@ const editarItem = (id:number) => {
     //remover da lista
     timesSalvos.splice(campIndex, 1);
     times = timesSalvos;
-    atualizarDados();
+    atualizarDadosTime();
   }
-  exibirTabela();
+  exibirTabelaTime();
 }
 
-const exibirTabela = () => {
-  tabela!.innerHTML = "";
-  times.forEach((time : Time) =>{
-    tabela!.innerHTML += `
+const exibirTabelaTime = () => {
+  if(tabelaTime!.innerHTML != "")
+    tabelaTime!.innerHTML = "";
+  timesSalvos.forEach((time : Time) =>{
+    tabelaTime!.innerHTML += `
     <tr>
          <td>${time.nome}</td>
          <td>${time.nomeCurto}</td>
          <button class="btnEdit" data-id="${time.id}""> Editar </button> 
-              <button class="btnRemove" data-id="${time.id}"> Remover </button> 
+         <button class="btnRemove" data-id="${time.id}"> Remover </button> 
     </tr>
   `;
   })
 }
 
-const atualizarDados = () => {
-localStorageCtrl.setLocalStorageItems("times", times)
-  exibirTabela()
-  editarOuRemoverListeners()
+const atualizarDadosTime = () => {
+  setLocalStorageItems("times", times)
+  exibirTabelaTime()
+  editarOuRemoverListenersTime()
 }
 
-const editarOuRemoverListeners = () => {
+const editarOuRemoverListenersTime = () => {
   const editarBtns = document.querySelectorAll("button.btnEdit")
   const removerBtns = document.querySelectorAll("button.btnRemove")
   editarBtns.forEach((btn) => {
     btn.addEventListener("click", (event) => {
       console.log("cliked editar", btn)
       const id = Number((event.target as HTMLElement).getAttribute("data-id"));
-      editarItem(id);
+      editarItemTime(id);
     });
   });
 
@@ -99,11 +104,11 @@ const editarOuRemoverListeners = () => {
     btn.addEventListener("click", (event) => {
       console.log("cliked remover", btn)
       const id = Number((event.target as HTMLElement).getAttribute("data-id"));
-      removerItem(id);
+      removerItemTime(id);
     });
   });
 }
 
 gerarTimesListener()
-exibirTabela()
-editarOuRemoverListeners()
+exibirTabelaTime()
+editarOuRemoverListenersTime()

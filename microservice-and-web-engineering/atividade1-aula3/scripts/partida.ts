@@ -1,44 +1,45 @@
-
-import { Campeonato, Partida } from "./interfaces";
-import { LocalStorageCtrl } from "./localstoragectrl.js";
-
-const form = document.getElementById("formPartida") as HTMLFormElement;
-const formItens = {
+const formPartida = document.getElementById("formPartida") as HTMLFormElement;
+const formPartidaItens = {
     campeonatoId: document.getElementById("campeonatos") as HTMLFormElement,
     mandanteI: document.getElementById("timeMandante") as HTMLFormElement,
     visitanteI: document.getElementById("timeVisitante") as HTMLFormElement,
 }
-const tabela = document.getElementById("partidas");
-const localStorageCtrl = new LocalStorageCtrl();
+const tabelaPartida = document.getElementById("partidas");
+interface Partida{
+    id: number;
+    timeMandante: string;
+    timeVisitante: string;
+    campeonato: Campeonato | null;
+}
 
-let partidas: Partida[] = [];
-const partidasSalvas = localStorageCtrl.getLocalStorageItem("partidas") as Partida[];
-const campeonatos = localStorageCtrl.getLocalStorageItem("campeonatos") as Campeonato[];
+const partidasSalvas = getLocalStorageItem("partidas") as Partida[];
+let partidas: Partida[] = partidasSalvas ?? [];
+const campeonatosPartidas = getLocalStorageItem("campeonatos") as Campeonato[];
 
 const gerarListaListener = () => {
-    form?.addEventListener("submit", (event) => {
+    formPartida?.addEventListener("submit", (event) => {
         event.preventDefault();
         let lastIdIncrement = partidasSalvas && partidasSalvas.length > 0 ? partidasSalvas[partidasSalvas.length - 1].id + 1 : 1;
         let partida: Partida = {
             id: lastIdIncrement,
-            campeonato: campeonatos ? campeonatos.find(c => c.id == Number.parseInt(formItens.campeonatoId.value)) ?? null : null,
-            timeMandante: formItens.mandanteI.value ?? "",
-            timeVisitante: formItens.visitanteI.value ?? "",
+            campeonato: campeonatosPartidas ? campeonatosPartidas.find(c => c.id == Number.parseInt(formPartidaItens.campeonatoId.value)) ?? null : null,
+            timeMandante: formPartidaItens.mandanteI.value ?? "",
+            timeVisitante: formPartidaItens.visitanteI.value ?? "",
         }
         partidas.push(partida)
-        form?.reset()
-        atualizarDados()
+        formPartida?.reset()
+        atualizarDadosPartidas()
       })
-      exibirTabela()
+      exibirTabelaPartidas()
 }
 
-const atualizarDados = () => {
-localStorageCtrl.setLocalStorageItems("partidas", partidas)
-  exibirTabela()
-  editarOuRemoverListeners()
+const atualizarDadosPartidas = () => {
+setLocalStorageItems("partidas", partidas)
+  exibirTabelaPartidas()
+  editarOuRemoverListenersPartidas()
 }
 
-const removerItem = (id:number) =>
+const removerItemPartidas = (id:number) =>
 {
    const campIndex =  partidasSalvas.findIndex(
     (p:Partida) => p.id == id);
@@ -48,21 +49,21 @@ const removerItem = (id:number) =>
     //remover da lista
     partidasSalvas.splice(campIndex, 1)
     partidas = partidasSalvas;
-    atualizarDados()
+    atualizarDadosPartidas()
   }
-  exibirTabela()
+  exibirTabelaPartidas()
 }
 
-const editarItem = (id:number) => {
+const editarItemPartidas = (id:number) => {
   //Find = buscar um elemento em um array
   const partida = partidasSalvas.find(
     (p : Partida) => p.id ==id);
   
   if(!partida)  return;
 
-  formItens.campeonatoId.value = partida.campeonato!.id ?? 0;
-  formItens.mandanteI.value = partida.timeMandante;
-  formItens.visitanteI.value = partida.timeVisitante;
+  formPartidaItens.campeonatoId.value = partida.campeonato!.id ?? 0;
+  formPartidaItens.mandanteI.value = partida.timeMandante;
+  formPartidaItens.visitanteI.value = partida.timeVisitante;
   
   //findIndex buscar o index do objeto
   const campIndex = partidasSalvas.findIndex((p : Partida) => p.id ==id);
@@ -73,22 +74,22 @@ const editarItem = (id:number) => {
     //remover da lista
     partidasSalvas.splice(campIndex, 1);
     partidas = partidasSalvas;
-    atualizarDados();
+    atualizarDadosPartidas();
   }
-  exibirTabela()
+  exibirTabelaPartidas()
 }
 
-const exibirTabela = () => {
-  if(tabela!.innerHTML != "")
-    tabela!.innerHTML = "";
-  partidas.forEach((p : Partida) =>{
-    tabela!.innerHTML += `
+const exibirTabelaPartidas = () => {
+  if(tabelaPartida!.innerHTML != "")
+    tabelaPartida!.innerHTML = "";
+  partidasSalvas.forEach((p : Partida) =>{
+    tabelaPartida!.innerHTML += `
     <tr>
         <td>${p.campeonato!.nome ?? "N/A"}</td>
         <td>${p.timeMandante}</td>
         <td>${p.timeVisitante}</td>
         <button class="btnEdit" data-id="${p.id}""> Editar </button> 
-              <button class="btnRemove" data-id="${p.id}"> Remover </button>
+        <button class="btnRemove" data-id="${p.id}"> Remover </button>
     </tr>
   `;
   })
@@ -97,21 +98,21 @@ const exibirTabela = () => {
 const exibirCampeonatos = () => {
     const selectCampeonatos = document.getElementById("campeonatos") as HTMLSelectElement;
     selectCampeonatos!.innerHTML = "";
-    campeonatos.forEach((c : Campeonato) =>{
+    campeonatosPartidas.forEach((c : Campeonato) =>{
       selectCampeonatos!.innerHTML += `
       <option value="${c.id}">${c.nome}</option>
     `;
     })
 }
 
-const editarOuRemoverListeners = () => {
+const editarOuRemoverListenersPartidas = () => {
   const editarBtns = document.querySelectorAll("button.btnEdit")
   const removerBtns = document.querySelectorAll("button.btnRemove")
   editarBtns.forEach((btn) => {
     btn.addEventListener("click", (event) => {
       console.log("cliked editar", btn)
       const id = Number((event.target as HTMLElement).getAttribute("data-id"));
-      editarItem(id);
+      editarItemPartidas(id);
     });
   });
 
@@ -119,12 +120,12 @@ const editarOuRemoverListeners = () => {
     btn.addEventListener("click", (event) => {
       console.log("cliked remover", btn)
       const id = Number((event.target as HTMLElement).getAttribute("data-id"));
-      removerItem(id);
+      removerItemPartidas(id);
     });
   });
 }
 
 gerarListaListener()
 exibirCampeonatos()
-exibirTabela()
-editarOuRemoverListeners()
+exibirTabelaPartidas()
+editarOuRemoverListenersPartidas()

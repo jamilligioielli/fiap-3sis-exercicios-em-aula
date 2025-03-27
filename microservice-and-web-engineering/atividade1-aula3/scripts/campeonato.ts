@@ -1,6 +1,3 @@
-import { Campeonato } from "./interfaces";
-import { LocalStorageCtrl } from "./localstoragectrl.js";
-
 const form = document.getElementById("formCampeonatos")  as HTMLFormElement;
 const formItens = {
     nomeI: document.getElementById("nome") as HTMLFormElement,
@@ -10,8 +7,20 @@ const formItens = {
     fimI: document.getElementById("dataFim") as HTMLFormElement
 }
 const tabela = document.getElementById("campeonatos") as HTMLElement;
-const localStorageCtrl = new LocalStorageCtrl();
-const campeonatosSalvos = localStorageCtrl.getLocalStorageItem("campeonatos") as Array<Campeonato>;
+
+type Categoria = "amador" | "profissional";
+type Torneio = "mata-mata" | "pontos-corridos";
+
+interface Campeonato{
+    id: number;
+    nome: string;
+    categoria: Categoria;
+    tipoTorneio: Torneio;
+    dataInicio: Date;
+    dataTermino: Date;
+}
+
+const campeonatosSalvos = getLocalStorageItem("campeonatos") as Array<Campeonato>;
 
 let campeonatos: Array<Campeonato> = campeonatosSalvos ?? [];
 
@@ -30,8 +39,8 @@ const gerarCampeonatosListener = () => {
         dataTermino: formItens.fimI.value ?? ""
     }
     campeonatos.push(campeonato)
-    form?.reset()
     atualizarDados()
+    form?.reset()
   })
 }
 
@@ -97,7 +106,7 @@ const exibirTabela = () => {
 }
 
 const atualizarDados = () => {
-  localStorageCtrl.setLocalStorageItems("campeonatos", campeonatos)
+  setLocalStorageItems("campeonatos", campeonatos)
   exibirTabela()
   editarOuRemoverListeners()
 }

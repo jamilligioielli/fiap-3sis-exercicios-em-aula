@@ -1,4 +1,4 @@
-import { LocalStorageCtrl } from "./localstoragectrl.js";
+"use strict";
 const form = document.getElementById("formCampeonatos");
 const formItens = {
     nomeI: document.getElementById("nome"),
@@ -8,8 +8,7 @@ const formItens = {
     fimI: document.getElementById("dataFim")
 };
 const tabela = document.getElementById("campeonatos");
-const localStorageCtrl = new LocalStorageCtrl();
-const campeonatosSalvos = localStorageCtrl.getLocalStorageItem("campeonatos");
+const campeonatosSalvos = getLocalStorageItem("campeonatos");
 let campeonatos = campeonatosSalvos ?? [];
 const gerarCampeonatosListener = () => {
     form?.addEventListener("submit", (event) => {
@@ -25,8 +24,8 @@ const gerarCampeonatosListener = () => {
             dataTermino: formItens.fimI.value ?? ""
         };
         campeonatos.push(campeonato);
-        form?.reset();
         atualizarDados();
+        form?.reset();
     });
 };
 function removerItem(id) {
@@ -81,7 +80,7 @@ const exibirTabela = () => {
     }
 };
 const atualizarDados = () => {
-    localStorageCtrl.setLocalStorageItems("campeonatos", campeonatos);
+    setLocalStorageItems("campeonatos", campeonatos);
     exibirTabela();
     editarOuRemoverListeners();
 };
