@@ -1,7 +1,7 @@
 import { LocalStorageCtrl } from "./localstoragectrl.js";
 const form = document.getElementById("formPartida");
 const formItens = {
-    campeonatoId: document.getElementById("campeonato"),
+    campeonatoId: document.getElementById("campeonatos"),
     mandanteI: document.getElementById("timeMandante"),
     visitanteI: document.getElementById("timeVisitante"),
 };
@@ -16,7 +16,7 @@ const gerarListaListener = () => {
         let lastIdIncrement = partidasSalvas && partidasSalvas.length > 0 ? partidasSalvas[partidasSalvas.length - 1].id + 1 : 1;
         let partida = {
             id: lastIdIncrement,
-            campeonato: campeonatos.find(c => c.id == Number.parseInt(formItens.campeonatoId.value)) ?? null,
+            campeonato: campeonatos ? campeonatos.find(c => c.id == Number.parseInt(formItens.campeonatoId.value)) ?? null : null,
             timeMandante: formItens.mandanteI.value ?? "",
             timeVisitante: formItens.visitanteI.value ?? "",
         };
@@ -27,7 +27,7 @@ const gerarListaListener = () => {
     exibirTabela();
 };
 const atualizarDados = () => {
-    localStorageCtrl.setLocalStorageItems("partida", partidas);
+    localStorageCtrl.setLocalStorageItems("partidas", partidas);
     exibirTabela();
     editarOuRemoverListeners();
 };
@@ -62,7 +62,8 @@ const editarItem = (id) => {
     exibirTabela();
 };
 const exibirTabela = () => {
-    tabela.innerHTML = "";
+    if (tabela.innerHTML != "")
+        tabela.innerHTML = "";
     partidas.forEach((p) => {
         tabela.innerHTML += `
     <tr>
@@ -103,6 +104,6 @@ const editarOuRemoverListeners = () => {
     });
 };
 gerarListaListener();
-exibirTabela();
 exibirCampeonatos();
+exibirTabela();
 editarOuRemoverListeners();

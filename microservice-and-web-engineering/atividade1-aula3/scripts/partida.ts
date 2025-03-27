@@ -4,7 +4,7 @@ import { LocalStorageCtrl } from "./localstoragectrl.js";
 
 const form = document.getElementById("formPartida") as HTMLFormElement;
 const formItens = {
-    campeonatoId: document.getElementById("campeonato") as HTMLFormElement,
+    campeonatoId: document.getElementById("campeonatos") as HTMLFormElement,
     mandanteI: document.getElementById("timeMandante") as HTMLFormElement,
     visitanteI: document.getElementById("timeVisitante") as HTMLFormElement,
 }
@@ -21,7 +21,7 @@ const gerarListaListener = () => {
         let lastIdIncrement = partidasSalvas && partidasSalvas.length > 0 ? partidasSalvas[partidasSalvas.length - 1].id + 1 : 1;
         let partida: Partida = {
             id: lastIdIncrement,
-            campeonato: campeonatos.find(c => c.id == Number.parseInt(formItens.campeonatoId.value)) ?? null,
+            campeonato: campeonatos ? campeonatos.find(c => c.id == Number.parseInt(formItens.campeonatoId.value)) ?? null : null,
             timeMandante: formItens.mandanteI.value ?? "",
             timeVisitante: formItens.visitanteI.value ?? "",
         }
@@ -33,7 +33,7 @@ const gerarListaListener = () => {
 }
 
 const atualizarDados = () => {
-localStorageCtrl.setLocalStorageItems("partida", partidas)
+localStorageCtrl.setLocalStorageItems("partidas", partidas)
   exibirTabela()
   editarOuRemoverListeners()
 }
