@@ -12,5 +12,3 @@ autor (string)
 paginas (number)
 genero (string, opcional).
 Utilizar o Localstorage para salvar as informações. 
-
-//3c, 4b, 5a, 6b, 7c,8a,9b,10a,11e
